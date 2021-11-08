@@ -142,6 +142,40 @@ QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name = "id",
     end
 end)
 
+--- Added community service command as from ESX_CommunityService
+--- add to community service as police
+QBCore.Commands.Add("communityserv", "Grant community service", {{name = "id", help = "ID of a person"}, {name = "count", help = "Count of service"}}, true, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if Player.PlayerData.job.name == "police" then
+        if args[1] and GetPlayerName(args[1]) ~= nil and tonumber(args[2]) then
+            TriggerEvent('esx_communityservice:sendToCommunityService', tonumber(args[1]), tonumber(args[2]))
+        else
+            TriggerClientEvent('QBCore:Notify', src, "Invalid id or action", "error")
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', src, "You must be a Police!", "error")
+    end
+end)
+
+--- Remove from community service as police
+QBCore.Commands.Add("endcommserv", "cancel community service", {{name = "id", help = "ID of a person"}}, true, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if Player.PlayerData.job.name == "police" then
+        if args[1] then
+            if args[1] ~= nil then
+                TriggerEvent('esx_communityservice:endCommunityServiceCommand', tonumber(args[1]))
+            else
+                TriggerClientEvent('QBCore:Notify', src, "Invalid id or action", "error")
+            end
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', src, "You must be a Police!", "error")
+    end
+end)
+--end of commserv command
+
 QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
